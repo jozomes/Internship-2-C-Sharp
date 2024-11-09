@@ -1,0 +1,14 @@
+C:\Users\Jozo\source\repos\Konzolna Aplikacija za upravljanje financija JM\Konzolna Aplikacija za upravljanje financija JM\bin\Debug\net8.0\Konzolna Aplikacija za upravljanje financija JM.exe
+C:\Users\Jozo\source\repos\Konzolna Aplikacija za upravljanje financija JM\Konzolna Aplikacija za upravljanje financija JM\bin\Debug\net8.0\Konzolna Aplikacija za upravljanje financija JM.deps.json
+C:\Users\Jozo\source\repos\Konzolna Aplikacija za upravljanje financija JM\Konzolna Aplikacija za upravljanje financija JM\bin\Debug\net8.0\Konzolna Aplikacija za upravljanje financija JM.runtimeconfig.json
+C:\Users\Jozo\source\repos\Konzolna Aplikacija za upravljanje financija JM\Konzolna Aplikacija za upravljanje financija JM\bin\Debug\net8.0\Konzolna Aplikacija za upravljanje financija JM.dll
+C:\Users\Jozo\source\repos\Konzolna Aplikacija za upravljanje financija JM\Konzolna Aplikacija za upravljanje financija JM\bin\Debug\net8.0\Konzolna Aplikacija za upravljanje financija JM.pdb
+C:\Users\Jozo\source\repos\Konzolna Aplikacija za upravljanje financija JM\Konzolna Aplikacija za upravljanje financija JM\obj\Debug\net8.0\Konzolna Aplikacija za upravljanje financija JM.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Jozo\source\repos\Konzolna Aplikacija za upravljanje financija JM\Konzolna Aplikacija za upravljanje financija JM\obj\Debug\net8.0\Konzolna Aplikacija za upravljanje financija JM.AssemblyInfoInputs.cache
+C:\Users\Jozo\source\repos\Konzolna Aplikacija za upravljanje financija JM\Konzolna Aplikacija za upravljanje financija JM\obj\Debug\net8.0\Konzolna Aplikacija za upravljanje financija JM.AssemblyInfo.cs
+C:\Users\Jozo\source\repos\Konzolna Aplikacija za upravljanje financija JM\Konzolna Aplikacija za upravljanje financija JM\obj\Debug\net8.0\Konzolna Aplikacija za upravljanje financija JM.csproj.CoreCompileInputs.cache
+C:\Users\Jozo\source\repos\Konzolna Aplikacija za upravljanje financija JM\Konzolna Aplikacija za upravljanje financija JM\obj\Debug\net8.0\Konzolna Aplikacija za upravljanje financija JM.dll
+C:\Users\Jozo\source\repos\Konzolna Aplikacija za upravljanje financija JM\Konzolna Aplikacija za upravljanje financija JM\obj\Debug\net8.0\refint\Konzolna Aplikacija za upravljanje financija JM.dll
+C:\Users\Jozo\source\repos\Konzolna Aplikacija za upravljanje financija JM\Konzolna Aplikacija za upravljanje financija JM\obj\Debug\net8.0\Konzolna Aplikacija za upravljanje financija JM.pdb
+C:\Users\Jozo\source\repos\Konzolna Aplikacija za upravljanje financija JM\Konzolna Aplikacija za upravljanje financija JM\obj\Debug\net8.0\Konzolna Aplikacija za upravljanje financija JM.genruntimeconfig.cache
+C:\Users\Jozo\source\repos\Konzolna Aplikacija za upravljanje financija JM\Konzolna Aplikacija za upravljanje financija JM\obj\Debug\net8.0\ref\Konzolna Aplikacija za upravljanje financija JM.dll
