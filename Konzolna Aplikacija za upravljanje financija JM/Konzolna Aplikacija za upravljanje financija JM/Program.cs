@@ -11,6 +11,25 @@ namespace DrugoPredavanje
 {
     class Program
     {
+        static string GetValidInput(string[] validInputs)
+        {
+            string userInput;
+
+            do
+            {
+                Console.Write("Please enter one of the following options: ");
+                Console.WriteLine(string.Join(", ", validInputs));
+                userInput = Console.ReadLine().ToLower().Trim();
+
+                if (Array.IndexOf(validInputs, userInput) == -1)
+                {
+                    Console.WriteLine("Invalid input. Please try again.");
+                }
+            }
+            while (Array.IndexOf(validInputs, userInput) == -1);
+
+            return userInput;
+        }
         static void newUser(Dictionary<int, (string name, string surname, DateTime dateOfBirth)> users,
                     Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> ziroTransakcije)> ziroRacuni,
                     Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> tekuciTransakcije)> tekuciRacuni,
@@ -305,7 +324,29 @@ namespace DrugoPredavanje
             }
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        static bool GetYesOrNo()
+        {
+            string userInput;
+
+            do
+            {
+                Console.Write("Please enter 'y' for yes or 'n' for no: ");
+                userInput = Console.ReadLine().ToLower().Trim();
+
+                if (userInput != "y" && userInput != "n")
+                {
+                    Console.WriteLine("Invalid input. Please try again.");
+                }
+            }
+            while (userInput != "y" && userInput != "n");
+
+            return userInput == "y";
+        }
+
+
         static void modifyUser(Dictionary<int, (string name, string surname, DateTime dateOfBirth)> users,
                     Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> ziroTransakcije)> ziroRacuni,
                     Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> tekuciTransakcije)> tekuciRacuni,
@@ -441,7 +482,7 @@ namespace DrugoPredavanje
                             string category = "";
 
 
-                            bool isValidInput = false;
+                            bool isValidInputD = false;
 
                             do
                             {
@@ -463,10 +504,10 @@ namespace DrugoPredavanje
                                      c) item-sold
                                     """);
                                     string letter = "d";
-
+                                    Console.Write("Enter 'a', 'b', or 'c': ");
                                     do
                                     {
-                                        Console.Write("Enter 'a', 'b', or 'c': ");
+                                        
                                         letter = Console.ReadLine().ToLower().Trim();
                                     } while (letter != "a" && letter != "b" && letter != "c");
                                     switch (letter)
@@ -518,18 +559,26 @@ namespace DrugoPredavanje
                                 }
 
                                 
-                                isValidInput = true;
-                            } while (!isValidInput);
-                            if (amount < 0)
-                            {
-                                accounts[userID].transactions[numberOfTransactions + 1] = (amount, "Standard", type, category, DateTime.Now);
-                                accounts[userID] = (accounts[userID].balance - amount, accounts[userID].transactions);
-                            }
-                            else
-                            {
-                                accounts[userID].transactions[numberOfTransactions + 1] = (amount, "Standard", type, category, DateTime.Now);
+                                isValidInputD = true;
+                            } while (!isValidInputD);
+                            
+                            
+                                accounts[userID].transactions.Add(numberOfTransactions + 1, (amount, "Standard", type, category, DateTime.Now));
                                 accounts[userID] = (accounts[userID].balance + amount, accounts[userID].transactions);
-                            }
+                                switch (signalLetter)
+                                {
+                                    case 'z':
+                                        ziroRacuni = accounts;
+                                        break;
+                                    case 'p':
+                                        prepaidRacuni = accounts;
+                                        break;
+                                    case 't':
+                                        tekuciRacuni = accounts;
+                                        break;
+                                }
+                            
+                            
                             Console.WriteLine("Transaction successfully inputted. Press any key to move back to the start: ");
                             Console.ReadKey();
                             start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
@@ -551,8 +600,8 @@ namespace DrugoPredavanje
                                     continue;
                                 }
 
-                                Console.Write("Enter type: ");
-                                typeB = Console.ReadLine() + "B";
+                                Console.Write("Enter type (must be prihod or rashod): ");
+                                typeB = Console.ReadLine();
 
 
                                 if (typeB.ToLower().Trim() == "prihod")
@@ -617,28 +666,39 @@ namespace DrugoPredavanje
                                     Console.WriteLine("You didn't select the right type. (prihod or rashod). Try again");
                                 }
 
-                                Console.Write("Enter date (YYYY-MM-DD): ");
+                                Console.Write("Enter date (DD/MM/YYYY): "); // Changed format to DD/MM/YYYY
                                 string dateString = Console.ReadLine();
 
-                                if (!DateTime.TryParseExact(dateString, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+                                if (!DateTime.TryParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+
                                 {
-                                    
+                                    Console.WriteLine("Invalid date format. Please enter the date in this format: DD/MM/YYYY  ");
+                            
+                             
                                     continue;
                                 }
 
+
                                 isValidInputB = true;
                             } while (!isValidInputB);
-                            if (amountB < 0)
-                            {
-                                accounts[userID].transactions[numberOfTransactions + 1] = (amountB, "Standard", typeB, categoryB, date);
-                                accounts[userID] = (accounts[userID].balance - amountB, accounts[userID].transactions);
-                            }
-                            else
-                            {
-                                accounts[userID].transactions[numberOfTransactions + 1] = (amountB, "Standard", typeB, categoryB, date);
-                                accounts[userID] = (accounts[userID].balance + amountB, accounts[userID].transactions);
-                            }
+
+                           
+                             accounts[userID].transactions.Add(numberOfTransactions + 1, (amountB, "Standard", typeB, categoryB, date));
+                             accounts[userID] = (accounts[userID].balance + amountB, accounts[userID].transactions);
+                            
                             Console.WriteLine("Transaction successfully inputted. Press any key to move back to the start: ");
+                            switch (signalLetter)
+                            {
+                                case 'z':
+                                    ziroRacuni = accounts;
+                                    break;
+                                case 'p':
+                                    prepaidRacuni = accounts;
+                                    break;
+                                case 't':
+                                    tekuciRacuni = accounts;
+                                    break;
+                            }
                             Console.ReadKey();
                             start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
                             break;
@@ -656,9 +716,409 @@ namespace DrugoPredavanje
                 """;
                     Console.Clear();
                     Console.WriteLine(deleteMessage);
+                    string inputDelete = "z";
+                    string[] validInputs = { "a", "b", "c", "d", "e", "f" };
+
+                    while (true)
+                    {
+                        Console.Write("Please enter a letter (a, b, c, d, e, or f): ");
+                        inputDelete = Console.ReadLine().ToLower().Trim();
+
+                        if (Array.Exists(validInputs, element => element == inputDelete))
+                        {
+                            Console.WriteLine($"You entered a valid option: {inputDelete}");
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid input. Please try again.");
+                        }
+                    }
+                    switch (inputDelete)
+                    {
+                        case "a":
+                            int deleteID;
+                            Console.Write("Please enter a positive integer that is a valid key in the dictionary: ");
+                            do
+                            {
+                                
+                                bool isValidInteger = int.TryParse(Console.ReadLine(), out deleteID);
+
+                                if (!isValidInteger || deleteID <= 0 || !users.ContainsKey(deleteID))
+                                {
+                                    Console.WriteLine("Invalid input. Please try again.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"You entered a valid key: {deleteID}");
+                                }
+                            }
+                            while (deleteID <= 0 || !users.ContainsKey(deleteID));
+                            Console.WriteLine("Are you sure you want to delete this transaction y or n?");
+                            bool decisionDelete = GetYesOrNo();
+                            if (decisionDelete)
+                            {
+                                Console.WriteLine("Successfully deleted transaction. Press any key to go back to the start");
+                                accounts[userID].transactions.Remove(deleteID);
+                                switch (signalLetter)
+                                {
+                                    case 'z':
+                                        ziroRacuni = accounts;
+                                        break;
+                                    case 'p':
+                                        prepaidRacuni = accounts;
+                                        break;
+                                    case 't':
+                                        tekuciRacuni = accounts;
+                                        break;
+                                }
+                                Console.ReadKey();
+                                start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Aborted user deletion. Press any key to move back to the start");
+                                Console.ReadKey();
+                                start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+
+                            }
+
+                            break;
+
+
+                        case "b":
+                            double deletionNumber = 0;
+                            bool isValidInputB = false;
+
+                            do
+                            {
+                                Console.Write("Enter a double number: ");
+                                string deleteInput = Console.ReadLine();
+
+                                isValidInputB = double.TryParse(deleteInput, out deletionNumber);
+
+                                if (!isValidInputB)
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid double number.");
+                                }
+                            } while (!isValidInputB);
+                            List<int> deleteIDS = new List<int>();
+                            foreach (var item in accounts.Keys)
+                            {
+                                foreach (var item1 in accounts[item].transactions.Keys)
+                                {
+                                    if (accounts[item].transactions[item1].amount < deletionNumber)
+                                    {
+                                        deleteIDS.Add(item1);
+                                    }
+                                }
+                            }
+                            bool decisionDeleteB = GetYesOrNo();
+                            if (decisionDeleteB)
+                            {
+                                for (global::System.Int32 i = 0; i < deleteIDS.Count; i++)
+                                {
+                                    accounts[userID].transactions.Remove(deleteIDS[i]);
+                                }
+                                Console.WriteLine("Transactions successfully deleted. Press any key to move back to start");
+                                Console.ReadKey();
+                                switch (signalLetter)
+                                {
+                                    case 'z':
+                                        ziroRacuni = accounts;
+                                        break;
+                                    case 'p':
+                                        prepaidRacuni = accounts;
+                                        break;
+                                    case 't':
+                                        tekuciRacuni = accounts;
+                                        break;
+                                }
+                                start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Aborted deletion. Press any key to move back to start.");
+                                Console.ReadKey();
+                                start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            }
+
+                            break;
+
+
+                        case "c":
+                            double deletionNumberC = 0;
+                            bool isValidInputC = false;
+
+                            do
+                            {
+                                Console.Write("Enter a double number: ");
+                                string deleteInput = Console.ReadLine();
+
+                                isValidInputC = double.TryParse(deleteInput, out deletionNumberC);
+
+                                if (!isValidInputC)
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid double number.");
+                                }
+                            } while (!isValidInputC);
+                            List<int> deleteIDSC = new List<int>();
+                            foreach (var item in accounts.Keys)
+                            {
+                                foreach (var item1 in accounts[userID].transactions.Keys)
+                                {
+                                    if (accounts[userID].transactions[item1].amount > deletionNumberC)
+                                    {
+                                        deleteIDSC.Add(item1);
+                                    }
+                                }
+                            }
+                            bool decisionDeleteC = GetYesOrNo();
+                            if (decisionDeleteC)
+                            {
+                                for (global::System.Int32 i = 0; i < deleteIDSC.Count; i++)
+                                {
+                                    accounts[userID].transactions.Remove(deleteIDSC[i]);
+                                }
+                                Console.WriteLine("Transactions successfully deleted. Press any key to move back to start");
+                                Console.ReadKey();
+                                switch (signalLetter)
+                                {
+                                    case 'z':
+                                        ziroRacuni = accounts;
+                                        break;
+                                    case 'p':
+                                        prepaidRacuni = accounts;
+                                        break;
+                                    case 't':
+                                        tekuciRacuni = accounts;
+                                        break;
+                                }
+                                start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Aborted deletion. Press any key to move back to start.");
+                                Console.ReadKey();
+                                start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            }
+                            break;
+
+
+                        case "d":
+                            List<int> prihodIDS = new List<int>();
+                            foreach (var item in accounts[userID].transactions.Keys)
+                            {
+                                if (accounts[userID].transactions[item].type.ToLower() == "prihod")
+                                {
+                                    prihodIDS.Add(item);
+                                }
+                            }
+                            bool decisionPrihod = GetYesOrNo();
+                            if (decisionPrihod)
+                            {
+                                for (global::System.Int32 i = 0; i < prihodIDS.Count; i++)
+                                {
+                                    accounts[userID].transactions.Remove(prihodIDS[i]);
+                                }
+                                Console.WriteLine("Transactions successfully deleted. Press any key to move back to start");
+                                Console.ReadKey();
+                                switch (signalLetter)
+                                {
+                                    case 'z':
+                                        ziroRacuni = accounts;
+                                        break;
+                                    case 'p':
+                                        prepaidRacuni = accounts;
+                                        break;
+                                    case 't':
+                                        tekuciRacuni = accounts;
+                                        break;
+                                }
+                                start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            }
+                            else 
+                            {
+                                Console.WriteLine("Aborted deletion. Press any key to move back to start.");
+                                Console.ReadKey();
+                                start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            }
+                            break;
+
+
+
+                        case "e":
+                            List<int> rashodIDS = new List<int>();
+                            foreach (var item in accounts[userID].transactions.Keys)
+                            {
+                                if (accounts[userID].transactions[item].type.ToLower() == "rashod")
+                                {
+                                    rashodIDS.Add(item);
+                                }
+                            }
+                            bool decisionRashod = GetYesOrNo();
+                            if (decisionRashod)
+                            {
+                                for (global::System.Int32 i = 0; i < rashodIDS.Count; i++)
+                                {
+                                    accounts[userID].transactions.Remove(rashodIDS[i]); 
+                                }
+                                Console.WriteLine("Transactions successfully deleted. Press any key to move back to start");
+                                Console.ReadKey();
+                                switch (signalLetter)
+                                {
+                                    case 'z':
+                                        ziroRacuni = accounts;
+                                        break;
+                                    case 'p':
+                                        prepaidRacuni = accounts;
+                                        break;
+                                    case 't':
+                                        tekuciRacuni = accounts;
+                                        break;
+                                }
+                                start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Aborted deletion. Press any key to move back to start.");
+                                Console.ReadKey();
+                                start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            }
+                        
+                            break;
+
+
+                        case "f":
+                            string category = "";
+                            bool validCategory = false;
+                            Console.Write("Enter a category(food, transport, sport, salary, friend transfer, item sold): ");
+
+                            do
+                            {
+                                category = Console.ReadLine();
+                                if (!string.IsNullOrEmpty(category))
+                                {
+                                                                   
+                                    foreach (var item in accounts[userID].transactions.Keys)
+                                        {
+                                            if (accounts[userID].transactions[item].category.ToLower().Trim() == category.ToLower().Trim())
+                                            {
+                                                Console.WriteLine("Inputted category is valid.");
+                                                validCategory = true;
+                                                break;
+                                            }
+                                        }
+                                }
+                            } while (validCategory == false);
+                            List<int> categoryIDS = new List<int>();
+                            foreach (var item in accounts[userID].transactions.Keys)
+                            {
+                                if (accounts[userID].transactions[item].category.ToLower() == category.ToLower().Trim())
+                                {
+                                    categoryIDS.Add(item);
+                                }
+                            }
+                            bool deleteCategory = GetYesOrNo();
+                            if (deleteCategory)
+                            {
+                                for (global::System.Int32 i = 0; i < categoryIDS.Count; i++)
+                                {
+                                    accounts[userID].transactions.Remove(categoryIDS[i]);
+                                }
+                                Console.WriteLine("Transactions successfully deleted. Press any key to move back to start");
+                                Console.ReadKey();
+                                switch (signalLetter)
+                                {
+                                    case 'z':
+                                        ziroRacuni = accounts;
+                                        break;
+                                    case 'p':
+                                        prepaidRacuni = accounts;
+                                        break;
+                                    case 't':
+                                        tekuciRacuni = accounts;
+                                        break;
+                                }
+                                start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Aborted deletion. Press any key to move back to start.");
+                                Console.ReadKey();
+                                start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            }
+
+                            break;
+                    }
                     break;
                 case 3:
-                    
+                    int transactionID;
+                    bool isValidInput = false;
+
+                    do
+                    {
+                        Console.Write("Enter transaction ID: ");
+                        if (!int.TryParse(Console.ReadLine(), out transactionID) || transactionID <= 0 || !accounts[userID].transactions.ContainsKey(transactionID))
+                        {
+                            Console.WriteLine("Invalid transaction ID. Please enter a valid positive integer.");
+                        }
+                        else
+                        {
+                            isValidInput = true;
+                        }
+                    } while (!isValidInput);
+                    double newAmount;
+                    string newType = "";
+                    bool isValidInputModify = false;
+
+                    do
+                    {
+                        Console.Write("Enter the new amount: ");
+                        if (!double.TryParse(Console.ReadLine(), out newAmount))
+                        {
+                            Console.WriteLine("Invalid amount. Please enter a valid number.");
+                            continue;
+                        }
+
+                        Console.Write("Enter the new type (prihod or rashod): ");
+                        newType = Console.ReadLine().ToLower();
+
+                        if (newType != "prihod" && newType != "rashod")
+                        {
+                            Console.WriteLine("Invalid type. Please enter 'prihod' or 'rashod'.");
+                            continue;
+                        }
+
+                        isValidInputModify = true;
+                    } while (!isValidInputModify);
+                    string categoryModify = "";
+                    bool validCategoryModify = false;
+                    Console.Write("Enter a category(food, transport, sport, salary, friend transfer, item sold): ");
+
+                    do
+                    {
+                        categoryModify = Console.ReadLine();
+                        if (!string.IsNullOrEmpty(categoryModify))
+                        {
+
+                            foreach (var item in accounts[userID].transactions.Keys)
+                            {
+                                if (accounts[userID].transactions[item].category.ToLower().Trim() == categoryModify.ToLower().Trim())
+                                {
+                                    Console.WriteLine("Inputted category is valid.");
+                                    validCategoryModify = true;
+                                    break;
+                                }
+                            }
+                        }
+                    } while (validCategoryModify == false);
+
+                    bool modifyTransaction = GetYesOrNo();
+                    if (modifyTransaction)
+                    {
+                        accounts[userID].transactions[transactionID] = (newAmount, "Standard", newType, categoryModify, DateTime.Now);
+                    }
                     break;
                 case 4:
                     string summaryMessage = """
@@ -671,11 +1131,175 @@ namespace DrugoPredavanje
                  g) svi prihodi
                  h) svi rashodi
                  i) sve transakcije za odabranu kategoriju
-                 i) sve transakcije za tip i kategoriju
+                 j) sve transakcije za tip i kategoriju
 
                 """;
+
                     Console.Clear();
                     Console.WriteLine(summaryMessage);
+                    string summaryInput = GetValidInput(["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"]);
+                    switch (summaryInput)
+                    {
+                        case "a":
+                            foreach (var item in accounts[userID].transactions.Keys)
+                            {
+                                Console.WriteLine($"{accounts[userID].transactions[item].type}  {accounts[userID].transactions[item].amount}  {accounts[userID].transactions[item].description}  {accounts[userID].transactions[item].category} {accounts[userID].transactions[item].dateTime}");
+                            }
+                            Console.WriteLine("Press any key to move back to the start.");
+                            Console.ReadKey();
+                            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            break;
+                        case "b":
+                            var amountUp = accounts[userID].transactions.OrderBy(x => x.Value.amount);
+                            foreach (var item in amountUp)
+                            {
+                                Console.WriteLine($"{item.Value.type} - {item.Value.amount} - {item.Value.description} - {item.Value.category} - {item.Value.dateTime}");
+                            }
+                            Console.WriteLine("Press any key to move back to the start.");
+                            Console.ReadKey();
+                            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            break;
+                        case "c":
+                            var amountDown = accounts[userID].transactions.OrderByDescending(x => x.Value.amount);
+                            foreach (var item in amountDown)
+                            {
+                                Console.WriteLine($"{item.Value.type} - {item.Value.amount} - {item.Value.description} - {item.Value.category} - {item.Value.dateTime}");
+                            }
+                            Console.WriteLine("Press any key to move back to the start.");
+                            Console.ReadKey();
+                            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            break;
+                        case "d":
+                            var alphabetical = accounts[userID].transactions.OrderBy(x => x.Value.category);
+                            foreach (var item in alphabetical)
+                            {
+                                Console.WriteLine($"{item.Value.type} - {item.Value.amount} - {item.Value.description} - {item.Value.category} - {item.Value.dateTime}");
+                            }
+                            Console.WriteLine("Press any key to move back to the start.");
+                            Console.ReadKey();
+                            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            break;
+                        case "e":
+                            var dateUp = accounts[userID].transactions.OrderBy(x => x.Value.dateTime);
+                            foreach (var item in dateUp)
+                            {
+                                Console.WriteLine($"{item.Value.type} - {item.Value.amount} - {item.Value.description} - {item.Value.category} - {item.Value.dateTime}");
+                            }
+                            Console.WriteLine("Press any key to move back to the start.");
+                            Console.ReadKey();
+                            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            break;
+                        case "f":
+                            var dateDown = accounts[userID].transactions.OrderByDescending(x => x.Value.dateTime);
+                            foreach (var item in dateDown)
+                            {
+                                Console.WriteLine($"{item.Value.type} - {item.Value.amount} - {item.Value.description} - {item.Value.category} - {item.Value.dateTime}");
+                            }
+                            Console.WriteLine("Press any key to move back to the start.");
+                            Console.ReadKey();
+                            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            break;
+                        case "g":
+                            foreach (var item in accounts[userID].transactions.Keys)
+                            {
+                                if (accounts[userID].transactions[item].type.ToLower() == "prihod") 
+                                {
+                                    Console.WriteLine($"{accounts[userID].transactions[item].type}  {accounts[userID].transactions[item].amount}  {accounts[userID].transactions[item].description}  {accounts[userID].transactions[item].category} {accounts[userID].transactions[item].dateTime}");
+                                }
+                            }
+                            Console.WriteLine("Press any key to move back to the start.");
+                            Console.ReadKey();
+                            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            break;
+                        case "h":
+                            foreach (var item in accounts[userID].transactions.Keys)
+                            {
+                                if (accounts[userID].transactions[item].type.ToLower() == "rashod")
+                                {
+                                    Console.WriteLine($"{accounts[userID].transactions[item].type}  {accounts[userID].transactions[item].amount}  {accounts[userID].transactions[item].description}  {accounts[userID].transactions[item].category} {accounts[userID].transactions[item].dateTime}");
+                                }
+                            }
+                            Console.WriteLine("Press any key to move back to the start.");
+                            Console.ReadKey();
+                            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            break;
+                        case "i":
+                            string category = "";
+                            bool validCategory = false;
+                            Console.Write("Enter a category(food, transport, sport, salary, friend transfer, item sold): ");
+
+                            do
+                            {
+                                category = Console.ReadLine();
+                                if (!string.IsNullOrEmpty(category))
+                                {
+
+                                    foreach (var item in accounts[userID].transactions.Keys)
+                                    {
+                                        if (accounts[userID].transactions[item].category.ToLower().Trim() == category.ToLower().Trim())
+                                        {
+                                            Console.WriteLine("Inputted category is valid.");
+                                            validCategory = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            } while (validCategory == false);
+                            foreach (var item in accounts[userID].transactions.Keys)
+                            {
+                                if (accounts[userID].transactions[item].category.ToLower().Trim() == category.ToLower().Trim()) 
+                                {
+                                    Console.WriteLine($"{accounts[userID].transactions[item].type}  {accounts[userID].transactions[item].amount}  {accounts[userID].transactions[item].description}  {accounts[userID].transactions[item].category} {accounts[userID].transactions[item].dateTime}");
+                                }
+                            }
+                            Console.WriteLine("Press any key to move back to the start.");
+                            Console.ReadKey();
+                            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            break;
+                        case "j":
+                            string category2 = "";
+                            bool validCategory2 = false;
+                            Console.Write("Enter a category(food, transport, sport, salary, friend transfer, item sold): ");
+
+                            do
+                            {
+                                category2 = Console.ReadLine();
+                                if (!string.IsNullOrEmpty(category2))
+                                {
+
+                                    foreach (var item in accounts[userID].transactions.Keys)
+                                    {
+                                        if (accounts[userID].transactions[item].category.ToLower().Trim() == category2.ToLower().Trim())
+                                        {
+                                            Console.WriteLine("Inputted category is valid.");
+                                            validCategory2 = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            } while (validCategory2 == false);
+                            string userInput = "";
+                            Console.Write("Enter 'prihod' or 'rashod': ");
+                            do
+                            {
+                                
+                                userInput = Console.ReadLine().ToLower().Trim();
+                            } while (userInput != "prihod" && userInput != "rashod");
+
+                            foreach (var item in accounts[userID].transactions.Keys)
+                            {
+                                if ((accounts[userID].transactions[item].category.ToLower().Trim() == category2.ToLower().Trim()) && (accounts[userID].transactions[item].type.ToLower().Trim() == userInput))
+                                {
+                                    Console.WriteLine($"{accounts[userID].transactions[item].type}  {accounts[userID].transactions[item].amount}  {accounts[userID].transactions[item].description}  {accounts[userID].transactions[item].category} {accounts[userID].transactions[item].dateTime}");
+                                }
+                            }
+                            Console.WriteLine("Press any key to move back to the start.");
+                            Console.ReadKey();
+                            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+
+                            break;
+                            
+                    }
                     break;
                 case 5:
                     string financialReportMessage = """
@@ -689,6 +1313,192 @@ namespace DrugoPredavanje
                 """;
                     Console.Clear();
                     Console.WriteLine(financialReportMessage);
+                    string validInput = GetValidInput(["a", "b", "c", "d", "e", "f"]);
+                    switch (validInput)
+                    {
+                        case "a":
+                            Console.Clear();
+                            Console.WriteLine("Trenutno stanje korisničkih računa: ");
+                            Console.WriteLine($"Žiro račun: {ziroRacuni[userID].balance}, Tekući račun: {tekuciRacuni[userID].balance}, Prepaid račun: {prepaidRacuni[userID].balance}");
+                            Console.WriteLine("Press any key to move back to the start.");
+                            Console.ReadKey();
+                            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            break;
+                        case "b":
+                            Console.WriteLine("Broj ukupnih transakcija: ");
+                            Console.WriteLine((ziroRacuni[userID].transactions.Count()) + (tekuciRacuni[userID].transactions.Count()) + (prepaidRacuni[userID].transactions.Count()));
+                            Console.WriteLine("Press any key to move back to the start.");
+                            Console.ReadKey();
+                            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            break;
+                        case "c":
+                            int month, year;
+
+                            do
+                            {
+                                Console.Write("Enter the month (1-12): ");
+                                if (!int.TryParse(Console.ReadLine(), out month) || month < 1 || month > 12)
+                                {
+                                    Console.WriteLine("Invalid month. Please enter a number between 1 and 12.");
+                                    continue;
+                                }
+
+                                Console.Write("Enter the year: ");
+                                if (!int.TryParse(Console.ReadLine(), out year))
+                                {
+                                    Console.WriteLine("Invalid year. Please enter a valid year.");
+                                    continue;
+                                }
+
+                                // If we reach this point, both month and year are valid
+                                break;
+                            } while (true);
+                            double sumRashod = 0;
+                            double sumPrihod = 0;
+                            foreach (var item in accounts[userID].transactions.Keys)
+                            {
+                                if (accounts[userID].transactions[item].dateTime.Month == month && accounts[userID].transactions[item].dateTime.Year == year)
+                                {
+                                    if (accounts[userID].transactions[item].type.ToLower() == "prihod")
+                                    {
+                                        sumPrihod += accounts[userID].transactions[item].amount;
+                                    }
+                                    else
+                                    {
+                                        sumRashod += accounts[userID].transactions[item].amount;
+                                    }
+                                }
+                            }
+                            Console.WriteLine("Suma rashoda je: "+ sumRashod);
+                            Console.WriteLine("Suma prihoda je: " + sumPrihod);
+                            Console.WriteLine("Press any key to move back to the start.");
+                            Console.ReadKey();
+                            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            break;
+
+
+                        case "d":
+                            string category = "";
+                            bool validCategory = false;
+                            Console.Write("Enter a category(food, transport, sport, salary, friend transfer, item sold): ");
+
+                            do
+                            {
+                                category = Console.ReadLine();
+                                if (!string.IsNullOrEmpty(category))
+                                {
+
+                                    foreach (var item in accounts[userID].transactions.Keys)
+                                    {
+                                        if (accounts[userID].transactions[item].category.ToLower().Trim() == category.ToLower().Trim())
+                                        {
+                                            Console.WriteLine("Inputted category is valid.");
+                                            validCategory = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            } while (validCategory == false);
+                            int rashodCount = 0;
+                            foreach (var item in accounts[userID].transactions.Keys)
+                            {
+                                if (accounts[userID].transactions[item].category.ToLower().Trim() == category.ToLower().Trim())
+                                {
+                                    
+                                
+                                    if (accounts[userID].transactions[item].type.ToLower() == "rashod")
+                                    {
+                                        rashodCount += 1;
+                                    }
+                                }
+
+                            }
+                            Console.WriteLine("Percentage of rashod for given category is: " + (rashodCount / accounts[userID].transactions.Count()));
+                            Console.WriteLine("Press any key to move back to the start.");
+                            Console.ReadKey();
+                            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            break;
+                        case "e":
+                            int monthE, yearE;
+
+                            do
+                            {
+                                Console.Write("Enter the month (1-12): ");
+                                if (!int.TryParse(Console.ReadLine(), out monthE) || monthE < 1 || monthE > 12)
+                                {
+                                    Console.WriteLine("Invalid month. Please enter a number between 1 and 12.");
+                                    continue;
+                                }
+
+                                Console.Write("Enter the year: ");
+                                if (!int.TryParse(Console.ReadLine(), out yearE))
+                                {
+                                    Console.WriteLine("Invalid year. Please enter a valid year.");
+                                    continue;
+                                }
+
+                                // If we reach this point, both month and year are valid
+                                break;
+                            } while (true);
+                            double sumAll = 0;
+                            double sumMonth = 0;
+                            foreach (var item in accounts[userID].transactions.Keys)
+                            {
+                                if (accounts[userID].transactions[item].dateTime.Month == monthE && accounts[userID].transactions[item].dateTime.Year == yearE)
+                                {
+                                    sumMonth += accounts[userID].transactions[item].amount;
+                                }
+                                sumAll += accounts[userID].transactions[item].amount;
+                            }
+                            Console.WriteLine("Average amount of the transaction for given month and year is: "+(sumMonth/sumAll));
+                            Console.WriteLine("Press any key to move back to the start.");
+                            Console.ReadKey();
+                            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            break;
+                        case "f":
+                            string category2 = "";
+                            bool validCategory2 = false;
+                            Console.Write("Enter a category(food, transport, sport, salary, friend transfer, item sold): ");
+
+                            do
+                            {
+                                category2 = Console.ReadLine();
+                                if (!string.IsNullOrEmpty(category2))
+                                {
+
+                                    foreach (var item in accounts[userID].transactions.Keys)
+                                    {
+                                        if (accounts[userID].transactions[item].category.ToLower().Trim() == category2.ToLower().Trim())
+                                        {
+                                            Console.WriteLine("Inputted category is valid.");
+                                            validCategory2 = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            } while (validCategory2 == false);
+                            string userInput = "";
+                            Console.Write("Enter 'prihod' or 'rashod': ");
+                            do
+                            {
+
+                                userInput = Console.ReadLine().ToLower().Trim();
+                            } while (userInput != "prihod" && userInput != "rashod");
+                            double sumCategory = 0;
+                            double sumOverall = 0;
+                            foreach (var item in accounts[userID].transactions.Keys)
+                            {
+                                if (accounts[userID].transactions[item].category.ToLower().Trim() == userInput)
+                                {
+                                    sumCategory += accounts[userID].transactions[item].amount;
+                                }
+                                sumOverall += accounts[userID].transactions[item].amount;
+                            }
+                            Console.WriteLine("Press any key to move back to the start.");
+                            Console.ReadKey();
+                            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
+                            break;
+                    }
                     break;
 
             }
@@ -703,6 +1513,7 @@ namespace DrugoPredavanje
             string surnameTest = "";
             bool flag = false;
             int userID = 0;
+            Console.Clear();
             Console.WriteLine("Enter your name and surname: ");
             do
             {
@@ -721,8 +1532,6 @@ namespace DrugoPredavanje
                         if ((users[item].name.ToLower() == nameTest.ToLower().Trim()) && (users[item].surname.ToLower() == surnameTest.ToLower().Trim()))
                         {
                             Console.WriteLine("Accessing user's info...");
-                            Console.WriteLine(users[item].name.ToLower() + users[item].surname.ToLower());
-                            Console.WriteLine(nameTest.ToLower() + surnameTest.ToLower());
                             userID = item;
                             flag = true;
                             break;
@@ -755,7 +1564,7 @@ namespace DrugoPredavanje
 
             do
             {
-                Console.Write("Enter a letter (z, p, or t): ");
+                Console.Write("Enter a letter (z for ziro, p for prepaid, or t for tekuci): ");
                 input = Console.ReadLine().ToLower().Trim(); ;
 
                 if (input != "z" && input != "p" && input != "t")
@@ -836,6 +1645,7 @@ namespace DrugoPredavanje
                 case 3:
                     Console.Clear();
                     Console.WriteLine("THANKS FOR VISITING");
+
                     break;
             }
         }
@@ -943,7 +1753,6 @@ namespace DrugoPredavanje
 
             start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
 
-            Console.ReadLine();
         }
     }
 }
