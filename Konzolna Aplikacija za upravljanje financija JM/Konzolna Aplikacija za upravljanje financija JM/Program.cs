@@ -14,10 +14,8 @@ namespace DrugoPredavanje
         static void newUser(Dictionary<int, (string name, string surname, DateTime dateOfBirth)> users,
                     Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> ziroTransakcije)> ziroRacuni,
                     Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> tekuciTransakcije)> tekuciRacuni,
-                    Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)> prepaidRacuni,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> ziroTransakcije,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> tekuciTransakcije,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)
+                    Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)> prepaidRacuni)
+                    
         {
             Console.Clear();
             int numberOfUsers = users.Count;
@@ -53,13 +51,13 @@ namespace DrugoPredavanje
             } while (true); // Loop until a valid date is entered
             users[numberOfUsers + 1] = ((newName.Substring(0,1).ToUpper() + newName.Substring(1).ToLower()), (newSurname.Substring(0, 1).ToUpper() + newSurname.Substring(1).ToLower()), newDateOfBirth);
             Console.WriteLine("User successfully entered!");
-            tekuciRacuni.Add(numberOfUsers + 1, (100.00, tekuciTransakcije));
-            ziroRacuni.Add(numberOfUsers + 1, (0.00, ziroTransakcije));
-            prepaidRacuni.Add(numberOfUsers + 1, (0.00, prepaidTransakcije));
+            tekuciRacuni.Add(numberOfUsers + 1, (100.00, new Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)>()));
+            ziroRacuni.Add(numberOfUsers + 1, (0.00, new Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)>()));
+            prepaidRacuni.Add(numberOfUsers + 1, (0.00, new Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)>()));
             Console.WriteLine("Press any key to go back to the start");
             Console.ReadKey();
 
-            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni, ziroTransakcije, tekuciTransakcije, prepaidTransakcije);
+            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,10 +65,8 @@ namespace DrugoPredavanje
         static void listUsers(Dictionary<int, (string name, string surname, DateTime dateOfBirth)> users,
                     Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> ziroTransakcije)> ziroRacuni,
                     Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> tekuciTransakcije)> tekuciRacuni,
-                    Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)> prepaidRacuni,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> ziroTransakcije,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> tekuciTransakcije,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)
+                    Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)> prepaidRacuni)
+                   
         {
             Console.Clear();
             string startMessaage = """
@@ -128,7 +124,7 @@ namespace DrugoPredavanje
             }
             Console.WriteLine("Press any key to get back to the start.");
             Console.ReadKey();
-            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni, ziroTransakcije, tekuciTransakcije, prepaidTransakcije);
+            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -137,10 +133,8 @@ namespace DrugoPredavanje
         static void userDropDown(Dictionary<int, (string name, string surname, DateTime dateOfBirth)> users,
                     Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> ziroTransakcije)> ziroRacuni,
                     Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> tekuciTransakcije)> tekuciRacuni,
-                    Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)> prepaidRacuni,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> ziroTransakcije,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> tekuciTransakcije,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)
+                    Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)> prepaidRacuni)
+               
         {
             string startMessaage = """
                  1 - Unos novog korisnika
@@ -191,19 +185,19 @@ namespace DrugoPredavanje
             switch (choice)
             {
                 case 1:
-                    newUser(users,ziroRacuni,tekuciRacuni, prepaidRacuni, ziroTransakcije, tekuciTransakcije, prepaidTransakcije);
+                    newUser(users,ziroRacuni,tekuciRacuni, prepaidRacuni);
                     break;
                 case 2:
-                    deleteUsers(users, ziroRacuni, tekuciRacuni, prepaidRacuni, ziroTransakcije, tekuciTransakcije, prepaidTransakcije);
+                    deleteUsers(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
                     break;
                 case 3:
-                    modifyUser(users, ziroRacuni, tekuciRacuni, prepaidRacuni, ziroTransakcije, tekuciTransakcije, prepaidTransakcije);
+                    modifyUser(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
                     break;
                 case 4:
-                    listUsers(users, ziroRacuni, tekuciRacuni, prepaidRacuni, ziroTransakcije, tekuciTransakcije, prepaidTransakcije);
+                    listUsers(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
                     break;
                 case 5:
-                    start(users, ziroRacuni, tekuciRacuni, prepaidRacuni, ziroTransakcije, tekuciTransakcije, prepaidTransakcije);
+                    start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
                     break;
                 case 0:
                     Console.Clear();
@@ -217,10 +211,8 @@ namespace DrugoPredavanje
         static void deleteUsers(Dictionary<int, (string name, string surname, DateTime dateOfBirth)> users,
                     Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> ziroTransakcije)> ziroRacuni,
                     Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> tekuciTransakcije)> tekuciRacuni,
-                    Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)> prepaidRacuni,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> ziroTransakcije,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> tekuciTransakcije,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)
+                    Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)> prepaidRacuni)
+                   
         {
             Console.Clear();
             string startMessaage = """
@@ -266,7 +258,7 @@ namespace DrugoPredavanje
                     users.Remove(inputNumber);
                     Console.WriteLine("User deleted succesfully, press any key to return to the start page.");
                     Console.ReadKey();
-                    start(users, ziroRacuni, tekuciRacuni, prepaidRacuni, ziroTransakcije, tekuciTransakcije, prepaidTransakcije);
+                    start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
                     break;
                 case "b":
                     string name, surname;
@@ -300,14 +292,14 @@ namespace DrugoPredavanje
                         Console.WriteLine("Successfully deleted user.");
                         Console.Write("Press any key to move back to start.");
                         Console.ReadKey();
-                        start(users, ziroRacuni, tekuciRacuni, prepaidRacuni, ziroTransakcije, tekuciTransakcije, prepaidTransakcije);
+                        start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
                     }
                     else
                     {
                         Console.WriteLine("User with given name and surname does not exist.");
                         Console.Write("Press any key to move back to start.");
                         Console.ReadKey();
-                        start(users, ziroRacuni, tekuciRacuni, prepaidRacuni, ziroTransakcije, tekuciTransakcije, prepaidTransakcije);
+                        start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
                     }
                     break;
             }
@@ -317,10 +309,8 @@ namespace DrugoPredavanje
         static void modifyUser(Dictionary<int, (string name, string surname, DateTime dateOfBirth)> users,
                     Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> ziroTransakcije)> ziroRacuni,
                     Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> tekuciTransakcije)> tekuciRacuni,
-                    Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)> prepaidRacuni,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> ziroTransakcije,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> tekuciTransakcije,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)
+                    Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)> prepaidRacuni
+                   )
         {
             Console.Clear();
             int inputNumber = 0;
@@ -372,36 +362,31 @@ namespace DrugoPredavanje
             Console.WriteLine($"User with the id {inputNumber} successfully modified!");
             Console.Write("Press any key to move back to the start");
             Console.ReadKey();
-            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni, ziroTransakcije, tekuciTransakcije, prepaidTransakcije);
+            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
 
         }
         static void accountManipulation(Dictionary<int, (string name, string surname, DateTime dateOfBirth)> users,
-                    Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> ziroTransakcije)> ziroRacuni,
-                    Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> tekuciTransakcije)> tekuciRacuni,
-                    Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)> prepaidRacuni,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> ziroTransakcije,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> tekuciTransakcije,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije, char signalLetter, int userID)
+                    Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> transactions)> ziroRacuni,
+                    Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> transactions)> tekuciRacuni,
+                    Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> transactions)> prepaidRacuni,
+                    char signalLetter, int userID)
         {
             int numberOfTransactions = 0;
             foreach (var item in users.Keys)
             {
-                numberOfTransactions += ziroRacuni[item].ziroTransakcije.Count();
-                numberOfTransactions += prepaidRacuni[item].prepaidTransakcije.Count();
-                numberOfTransactions += tekuciRacuni[item].tekuciTransakcije.Count();
+                numberOfTransactions += ziroRacuni[item].transactions.Count();
+                numberOfTransactions += prepaidRacuni[item].transactions.Count();
+                numberOfTransactions += tekuciRacuni[item].transactions.Count();
             }
-            Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> transactions = ziroTransakcije;
             Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> transactions)> accounts = ziroRacuni;
             switch (signalLetter)
             {
                 case 'z':
                     break;
                 case 'p':
-                    transactions = prepaidTransakcije;
                     accounts = prepaidRacuni;
                     break;
                 case 't':
-                    transactions = tekuciTransakcije;
                     accounts = tekuciRacuni;
                     break;
             }
@@ -537,17 +522,17 @@ namespace DrugoPredavanje
                             } while (!isValidInput);
                             if (amount < 0)
                             {
-                                transactions[numberOfTransactions + 1] = (amount, "Standard", type, category, DateTime.Now);
+                                accounts[userID].transactions[numberOfTransactions + 1] = (amount, "Standard", type, category, DateTime.Now);
                                 accounts[userID] = (accounts[userID].balance - amount, accounts[userID].transactions);
                             }
                             else
                             {
-                                transactions[numberOfTransactions + 1] = (amount, "Standard", type, category, DateTime.Now);
+                                accounts[userID].transactions[numberOfTransactions + 1] = (amount, "Standard", type, category, DateTime.Now);
                                 accounts[userID] = (accounts[userID].balance + amount, accounts[userID].transactions);
                             }
                             Console.WriteLine("Transaction successfully inputted. Press any key to move back to the start: ");
                             Console.ReadKey();
-                            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni, ziroTransakcije, tekuciTransakcije, prepaidTransakcije);
+                            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
                             break;
                             case "b":
                             double amountB;
@@ -645,17 +630,17 @@ namespace DrugoPredavanje
                             } while (!isValidInputB);
                             if (amountB < 0)
                             {
-                                transactions[numberOfTransactions + 1] = (amountB, "Standard", typeB, categoryB, date);
+                                accounts[userID].transactions[numberOfTransactions + 1] = (amountB, "Standard", typeB, categoryB, date);
                                 accounts[userID] = (accounts[userID].balance - amountB, accounts[userID].transactions);
                             }
                             else
                             {
-                                transactions[numberOfTransactions + 1] = (amountB, "Standard", typeB, categoryB, date);
+                                accounts[userID].transactions[numberOfTransactions + 1] = (amountB, "Standard", typeB, categoryB, date);
                                 accounts[userID] = (accounts[userID].balance + amountB, accounts[userID].transactions);
                             }
                             Console.WriteLine("Transaction successfully inputted. Press any key to move back to the start: ");
                             Console.ReadKey();
-                            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni, ziroTransakcije, tekuciTransakcije, prepaidTransakcije);
+                            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
                             break;
                     }
 
@@ -711,10 +696,8 @@ namespace DrugoPredavanje
         static void accountDropDown(Dictionary<int, (string name, string surname, DateTime dateOfBirth)> users,
                     Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> ziroTransakcije)> ziroRacuni,
                     Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> tekuciTransakcije)> tekuciRacuni,
-                    Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)> prepaidRacuni,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> ziroTransakcije,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> tekuciTransakcije,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)
+                    Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)> prepaidRacuni)
+                   
         {
             string nameTest = "";
             string surnameTest = "";
@@ -785,14 +768,14 @@ namespace DrugoPredavanje
             {
                 case "z":
                     Console.WriteLine("Accessing ziro account. Press any key to continue.");
-                    accountManipulation(users, ziroRacuni, tekuciRacuni, prepaidRacuni, ziroTransakcije, tekuciTransakcije, prepaidTransakcije, 'z', userID);
+                    accountManipulation(users, ziroRacuni, tekuciRacuni, prepaidRacuni, 'z', userID);
                     break;
                 case "p":
                     Console.WriteLine("Accessing prepaid account. Press any key to continue.");
-                    accountManipulation(users, ziroRacuni, tekuciRacuni, prepaidRacuni, ziroTransakcije, tekuciTransakcije, prepaidTransakcije, 'p', userID);
+                    accountManipulation(users, ziroRacuni, tekuciRacuni, prepaidRacuni, 'p', userID);
                     break;
                 case "t":
-                    accountManipulation(users, ziroRacuni, tekuciRacuni, prepaidRacuni, ziroTransakcije, tekuciTransakcije, prepaidTransakcije, 't', userID);
+                    accountManipulation(users, ziroRacuni, tekuciRacuni, prepaidRacuni, 't', userID);
                     Console.WriteLine("Accessing tekuci account. Press any key to continue.");
                     break;
             }
@@ -807,10 +790,8 @@ namespace DrugoPredavanje
         static void start(Dictionary<int, (string name, string surname, DateTime dateOfBirth)> users,
                     Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> ziroTransakcije)> ziroRacuni,
                     Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> tekuciTransakcije)> tekuciRacuni,
-                    Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)> prepaidRacuni,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> ziroTransakcije,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> tekuciTransakcije,
-                    Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)
+                    Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> prepaidTransakcije)> prepaidRacuni)
+                   
         {
             string startMessaage = """
                  1 - Korisnici
@@ -847,10 +828,10 @@ namespace DrugoPredavanje
             switch (choice) 
             {
                 case 1:
-                    userDropDown(users, ziroRacuni, tekuciRacuni, prepaidRacuni, ziroTransakcije, tekuciTransakcije, prepaidTransakcije);
+                    userDropDown(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
                     break;
                 case 2:
-                    accountDropDown(users, ziroRacuni, tekuciRacuni, prepaidRacuni, ziroTransakcije, tekuciTransakcije, prepaidTransakcije);
+                    accountDropDown(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
                     break;
                 case 3:
                     Console.Clear();
@@ -872,54 +853,95 @@ namespace DrugoPredavanje
             users.Add(4, ("David", "Lee", new DateTime(1995, 3, 7)));
             users.Add(5, ("Emily", "Davis", new DateTime(2002, 12, 25)));
 
-            var ziroTransakcije = new Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)>();
-            var tekuciTransakcije = new Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)>();
-            var prepaidTransakcije = new Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)>();
 
             var ziroRacuni = new Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> transactions)>();
             var tekuciRacuni = new Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> transactions)>();
             var prepaidRacuni = new Dictionary<int, (double balance, Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)> transactions)>();
 
-            tekuciRacuni.Add(1, (100.00, tekuciTransakcije));
-            tekuciRacuni.Add(2, (100.00, tekuciTransakcije));
-            tekuciRacuni.Add(3, (100.00, tekuciTransakcije));
-            tekuciRacuni.Add(4, (100.00, tekuciTransakcije));
-            tekuciRacuni.Add(5, (100.00, tekuciTransakcije));
+            ziroRacuni.Add(1, (-500000.00, new Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)>())); // Test negative balance case
+            ziroRacuni.Add(2, (0.00, new Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)>()));
+            ziroRacuni.Add(3, (0.00, new Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)>()));
+            ziroRacuni.Add(4, (0.00, new Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)>()));
+            ziroRacuni.Add(5, (0.00, new Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)>()));
 
-            ziroRacuni.Add(1, (-500000.00, ziroTransakcije)); //testiram pocetni ispis
-            ziroRacuni.Add(2, (0.00, ziroTransakcije));
-            ziroRacuni.Add(3, (0.00, ziroTransakcije));
-            ziroRacuni.Add(4, (0.00, ziroTransakcije));
-            ziroRacuni.Add(5, (0.00, ziroTransakcije));
+            tekuciRacuni.Add(1, (100.00, new Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)>()));
+            tekuciRacuni.Add(2, (100.00, new Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)>()));
+            tekuciRacuni.Add(3, (100.00, new Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)>()));
+            tekuciRacuni.Add(4, (100.00, new Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)>()));
+            tekuciRacuni.Add(5, (100.00, new Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)>()));
 
-            prepaidRacuni.Add(1, (0.00, prepaidTransakcije));
-            prepaidRacuni.Add(2, (0.00, prepaidTransakcije));
-            prepaidRacuni.Add(3, (0.00, prepaidTransakcije));
-            prepaidRacuni.Add(4, (0.00, prepaidTransakcije));
-            prepaidRacuni.Add(5, (0.00, prepaidTransakcije));
+            prepaidRacuni.Add(1, (0.00, new Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)>()));
+            prepaidRacuni.Add(2, (0.00, new Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)>()));
+            prepaidRacuni.Add(3, (0.00, new Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)>()));
+            prepaidRacuni.Add(4, (0.00, new Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)>()));
+            prepaidRacuni.Add(5, (0.00, new Dictionary<int, (double amount, string description, string type, string category, DateTime dateTime)>()));
             int transactionId = 0;
-
-
             foreach (var userId in users.Keys)
             {
-                // Three transactions for each user in the 'tekuci' account
-                tekuciTransakcije[transactionId++] = (50.0, $"User {userId} Standard", "prihod", "Salary", DateTime.Now.AddDays(-1));
-                tekuciTransakcije[transactionId++] = (20.0, $"User {userId} Standard", "prihod", "Salary", DateTime.Now.AddDays(-2));
-                tekuciTransakcije[transactionId++] = (15.0, $"User {userId} Standard", "prihod", "Friend transfer", DateTime.Now.AddDays(-3));
-                tekuciRacuni[userId] = (tekuciRacuni[userId].balance + 85, tekuciRacuni[userId].transactions);
-                // Three transactions for each user in the 'ziro' account
-                ziroTransakcije[transactionId++] = (150.0, $"User {userId} Standard", "prihod", "Salary", DateTime.Now.AddDays(-1));
-                ziroTransakcije[transactionId++] = (40.0, $"User {userId} Standard", "prihod", "Item sold", DateTime.Now.AddDays(-2));
-                ziroTransakcije[transactionId++] = (10.0, $"User {userId} Standard", "prihod", "Salary", DateTime.Now.AddDays(-3));
-                ziroRacuni[userId] = (ziroRacuni[userId].balance + 200, tekuciRacuni[userId].transactions);
-                // Three transactions for each user in the 'prepaid' account
-                prepaidTransakcije[transactionId++] = (100.0, $"User {userId} Standard", "prihod", "Salary", DateTime.Now.AddDays(-1));
-                prepaidTransakcije[transactionId++] = (25.0, $"User {userId} Standard", "prihod", "Item sold", DateTime.Now.AddDays(-2));
-                prepaidTransakcije[transactionId++] = (30.0, $"User {userId} Standard", "prihod", "Salary", DateTime.Now.AddDays(-3));
-                prepaidRacuni[userId] = (prepaidRacuni[userId].balance + 155, prepaidRacuni[userId].transactions);
+                // Adding transactions to ziroRacuni
+                if (ziroRacuni.ContainsKey(userId))
+                {
+                    var account = ziroRacuni[userId];
+
+                    // Prihod (Income) transaction - Salary
+                    account.transactions[transactionId++] = (1000.00, "Standard", "Prihod", "Salary", DateTime.Now);
+                    account.balance += 1000.00;
+
+                    // Rashod (Expense) transaction - Food
+                    account.transactions[transactionId++] = (-200.00, "Standard", "Rashod", "Food", DateTime.Now);
+                    account.balance -= 200.00;
+
+                    // Rashod (Expense) transaction - Transport
+                    account.transactions[transactionId++] = (-50.00, "Standard", "Rashod", "Transport", DateTime.Now);
+                    account.balance -= 50.00;
+
+                    ziroRacuni[userId] = account; // Update ziroRacuni with new balance and transactions
+                }
+
+                // Adding transactions to tekuciRacuni
+                if (tekuciRacuni.ContainsKey(userId))
+                {
+                    var account = tekuciRacuni[userId];
+
+                    // Prihod (Income) transaction - Salary
+                    account.transactions[transactionId++] = (1500.00, "Standard", "Prihod", "Friend transfer", DateTime.Now);
+                    account.balance += 1500.00;
+
+                    // Rashod (Expense) transaction - Food
+                    account.transactions[transactionId++] = (-300.00, "Standard", "Rashod", "Food", DateTime.Now);
+                    account.balance -= 300.00;
+
+                    // Rashod (Expense) transaction - Utilities
+                    account.transactions[transactionId++] = (-100.00, "Standard", "Rashod", "Sport", DateTime.Now);
+                    account.balance -= 100.00;
+
+                    tekuciRacuni[userId] = account; // Update tekuciRacuni with new balance and transactions
+                }
+
+                // Adding transactions to prepaidRacuni
+                if (prepaidRacuni.ContainsKey(userId))
+                {
+                    var account = prepaidRacuni[userId];
+
+                    // Prihod (Income) transaction - Salary
+                    account.transactions[transactionId++] = (500.00, "Standard", "Prihod", "Salary", DateTime.Now);
+                    account.balance += 500.00;
+
+                    // Rashod (Expense) transaction - Food
+                    account.transactions[transactionId++] = (-100.00, "Standard", "Rashod", "Food", DateTime.Now);
+                    account.balance -= 100.00;
+
+                    // Rashod (Expense) transaction - Entertainment
+                    account.transactions[transactionId++] = (-50.00, "Standard", "Rashod", "Food", DateTime.Now);
+                    account.balance -= 50.00;
+
+                    prepaidRacuni[userId] = account; // Update prepaidRacuni with new balance and transactions
+                }
             }
-            
-            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni, ziroTransakcije, tekuciTransakcije, prepaidTransakcije);
+
+
+
+            start(users, ziroRacuni, tekuciRacuni, prepaidRacuni);
 
             Console.ReadLine();
         }
